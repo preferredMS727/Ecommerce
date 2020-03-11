@@ -44,7 +44,7 @@ export function usersReducer(state = initialUsersState, action: UserActions): Us
             ...state, lastCreatedUserId: action.payload.user.id
         });
         case UserActionTypes.UserUpdated: return adapter.updateOne(action.payload.partialUser, state);
-        case UserActionTypes.UserDeleted: return adapter.removeOne(action.payload.id, state);
+        case UserActionTypes.UserDeleted: return adapter.removeOne(action.payload.user.id, state);
         case UserActionTypes.UsersPageCancelled: return {
             ...state, listLoading: false, lastQuery: new QueryParamsModel({})
         };

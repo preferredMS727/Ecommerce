@@ -6,7 +6,7 @@ import { User } from '../_models/user.model';
 import { FirebaseUserModel } from '../../../_shared/models/firebase-user.model';
 import { QueryParamsModel, QueryResultsModel, HttpUtilsService } from '../../_base/crud';
 import { map, catchError, mergeMap, tap } from 'rxjs/operators';
-import { Observable, of, forkJoin, from } from 'rxjs';
+import { Observable, of, forkJoin, from, combineLatest } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import * as randomize from 'randomatic';
 
@@ -179,8 +179,9 @@ export class FireAuthService {
 
   // CREATE =>  POST: add a new user to the server
   createUser(user: User): Observable<User> {
+    const defaultPassword = '000000'
     let newUser: FirebaseUserModel = this.getBlankFireUserModel();
-    const subscription = from(this.afAuth.auth.createUserWithEmailAndPassword(user.email, '000000')).pipe(
+    const subscription = from(this.afAuth.auth.createUserWithEmailAndPassword(user.email, defaultPassword)).pipe(
       tap((res) => {
         console.log('new user is create firebase auth: ', res);
       }),
@@ -188,6 +189,7 @@ export class FireAuthService {
       map((registerdID) => {
         Object.assign(newUser, user);
         newUser.id = registerdID;
+        newUser.password = defaultPassword;
         newUser.address = {
           addressLine: '',
           city: '',
@@ -211,6 +213,21 @@ export class FireAuthService {
         return resultNewUser;
       })
     );
+    return subscription;
+  }
+
+  // DELETE => delete the user from the server
+  deleteUser(user: User) {
+    console.log('user to delete: ', user)
+    const colSub = from(this.firestore.collection(COLLECT_NAME).doc(user.id).delete());
+    const authSub = from(this.afAuth.auth.signInWithEmailAndPassword(user.email, user.password)).pipe(
+      map((res) => {
+        console.log('delete user result: ', res);
+        const user = this.afAuth.auth.currentUser;
+        user.delete();
+      })
+    );
+    const subscription = combineLatest(colSub, authSub)
     return subscription;
   }
 
@@ -242,14 +259,6 @@ export class FireAuthService {
   //   const subscription = from(this.firestore.collection(COLLECT_NAME).doc(user))
   //   this.firestore.doc('users/' + user.id).delete();
   // }
-
-  // DELETE => delete the user from the server
-  deleteUser(userId: string) {
-    const subscription = from(this.firestore.collection(COLLECT_NAME).doc(userId).delete());
-    return subscription;
-    // const url = `${API_USERS_URL}/${userId}`;
-    // return this.http.delete(url);
-  }
 
   findUsers(queryParams: QueryParamsModel): Observable<QueryResultsModel> {
     return this.firestore.collection('users').valueChanges().pipe(

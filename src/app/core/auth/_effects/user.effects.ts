@@ -61,7 +61,7 @@ export class UserEffects {
             ofType<UserDeleted>(UserActionTypes.UserDeleted),
             mergeMap(( { payload } ) => {
                     this.store.dispatch(this.showActionLoadingDistpatcher);
-                    return this.fireAuthService.deleteUser(payload.id);
+                    return this.fireAuthService.deleteUser(payload.user);
                     // return this.auth.deleteUser(payload.id);
                 }
             ),

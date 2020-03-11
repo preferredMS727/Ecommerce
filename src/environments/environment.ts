@@ -8,7 +8,14 @@ export const environment = {
   authTokenKey: 'authToken',
   authId: 'authId',
   firebase:{
-
+    apiKey: 'AIzaSyBoJHc65a_DKoBIP-K-B0R3NiIYsM0R7C0',
+    authDomain: 'project-test-4676e.firebaseapp.com',
+    databaseURL: 'https://project-test-4676e.firebaseio.com',
+    projectId: 'project-test-4676e',
+    storageBucket: 'project-test-4676e.appspot.com',
+    messagingSenderId: '244565579630',
+    appId: '1:244565579630:web:95894eaf847f0b3c8e137f',
+    measurementId: 'G-MS8RN2MLNP'
   }
 };
 

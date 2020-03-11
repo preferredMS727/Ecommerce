@@ -188,7 +188,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 				return;
 			}
 
-			this.store.dispatch(new UserDeleted({ id: _item.id }));
+			this.store.dispatch(new UserDeleted({ user: _item }));
 			this.layoutUtilsService.showActionNotification(_deleteMessage, MessageType.Delete);
 		});
 	}
