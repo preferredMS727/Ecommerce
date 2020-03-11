@@ -1,0 +1,22 @@
+<div class="kt-login__body">
+	<div class="kt-login__form">
+		<div class="kt-form">
+            <div class="kt-login__title mb-3">
+                <h3 class="text-center">Thank You for Registering</h3>
+            </div>
+			<div class="formGroup mb-3">
+				<h5 class="text-center">We have sent a confirmation email to <strong>{{userEmail}}</strong>.</h5>
+				<h5 class="text-center">Please check your email and click on the link to verfiy your email address.</h5>
+			</div>
+		</div>
+        <div class="kt-login__actions">
+            <a href="javascript:;" routerLink="/auth/sign-in" class="kt-link kt-login__link-forgot">
+                Sign in
+            </a>
+            <button (click)="resendVerifyEmail()" [ngClass]="{'kt-spinner kt-spinner--right kt-spinner--md kt-spinner--light': loading}" class="btn btn-primary btn-elevate kt-login__btn-primary">
+                <i class="fas fa-redo-alt"></i>
+                Resend Verification Email
+            </button>
+        </div>
+	</div>
+</div>
